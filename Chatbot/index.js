@@ -14,9 +14,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
   
+ //Function to fetch the data from the spreadsheets
   function getDataFromSpreadsheet(){
      return axios.get('https://sheetdb.io/api/v1/6l02cg86oregw');
   }
+ 
+ //This function fetches the realtime data about a particular event, when requested by the user.
   function clubEvents(agent)
   {
     const name=agent.parameters.name;
@@ -30,6 +33,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         });
     });
   }
+ 
+ //This function is used to return the general information about the club like convener, establishment, ideas, aims, etc.
   function getInfo(agent)
   {
     if(agent.parameters.why !== 'nothing')
@@ -46,6 +51,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     if(agent.parameters.purpose !== 'nothing')
       agent.add('The club was started to promote algorithmic thinking and open source development.It strives to improve the open source culture in the institute.');
   }
+ 
+ //This function counts and generates the no. of events scheduled for a particular event based on a spreadsheet.
   function calculate(agent)
   {
     const month=["january","february","march","april","may","june","july","august","september","october","november","december"];
@@ -74,12 +81,15 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     });
   }
   
+ 
+ //The default Welcome Intent of the chatbot
   function welcome(agent) {
     if(agent.parameters.hello !== 'nothing')
     agent.add('Hi there! Greetings! How can I assist? If you want to enquire about a particular event, just tell me the name.');   
    
   }
  
+ //The default fallback intent of the chatbot, in case intent matching fails.
   function fallback(agent) {
     agent.add(`I didn't understand`);
     agent.add(`I'm sorry, can you try again?`);

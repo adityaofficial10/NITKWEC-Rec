@@ -1,3 +1,7 @@
+//Made by:Aditya R Rudra
+//Dept of CSE
+
+
 // See https://github.com/dialogflow/dialogflow-fulfillment-nodejs
 // for Dialogflow fulfillment library docs, samples, and to report issues
 'use strict';
@@ -14,16 +18,19 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
   
- //Function to fetch the data from the spreadsheets
-  function getDataFromSpreadsheet(){
+ //These functions are deployed to fetch realtime data from the spreadsheets related to Club Events and Members.Although members functionality is not yet used but has been implemented.
+  function getDataFromSpreadsheet1(){
      return axios.get('https://sheetdb.io/api/v1/6l02cg86oregw');
   }
+  function getDataFromSpreadsheet2(){
+     return axios.get('https://sheetdb.io/api/v1/tl3emr4k277kz');
+  }
  
- //This function fetches the realtime data about a particular event, when requested by the user.
+ //The function to fetch real time data of the requested event from the spreadsheet 
   function clubEvents(agent)
   {
     const name=agent.parameters.name;
-    return getDataFromSpreadsheet().then(res =>{
+    return getDataFromSpreadsheet1().then(res =>{
       res.data.map(event=>{
         if(event.title===name)
         { 
@@ -33,12 +40,11 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
         });
     });
   }
- 
- //This function is used to return the general information about the club like convener, establishment, ideas, aims, etc.
+ //The function to return a variety of general information related to the club as required by the user
   function getInfo(agent)
   {
     if(agent.parameters.why !== 'nothing')
-      agent.add('Web Enthusiasts Club is an exclusive club of NITK.We conduct many activities related to Competitive Programming, Development and much more.It is a platform to take your skills to the next level');
+      agent.add('Web Enthusiasts Club is an exclusive club of NITK.We conduct many activities related to Competitive Programming, Development and much more.It is a platform to take your skills to the next level. If you want to join, then check out the recruitment drive.');
     if(agent.parameters.post !== 'nothing')
     {
       var post=agent.parameters.post;
@@ -51,8 +57,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     if(agent.parameters.purpose !== 'nothing')
       agent.add('The club was started to promote algorithmic thinking and open source development.It strives to improve the open source culture in the institute.');
   }
- 
- //This function counts and generates the no. of events scheduled for a particular event based on a spreadsheet.
+ //The function calculates number of events scheduled in a month as specified by the user.This is just a sample which shows that the chatbot can interpret the realtime data properly.
   function calculate(agent)
   {
     const month=["january","february","march","april","may","june","july","august","september","october","november","december"];
@@ -62,7 +67,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
     var stri=' ';
     console.log(index);
     var cnt=0;
-    return getDataFromSpreadsheet().then(res =>{
+    return getDataFromSpreadsheet1().then(res =>{
       res.data.map(event=>{
         var dateval=new Date(event.date);
         console.log(dateval.getMonth());
@@ -80,16 +85,50 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
           agent.add('There are no events scheduled for this month.');
     });
   }
-  
  
- //The default Welcome Intent of the chatbot
+ //The function which calculates member data(not used yet)
+  function calcmembers(){
+    var cnt=0;
+    return getDataFromSpreadsheet2().then((res)=>{
+      res.data.map((event)=>{
+        if(event.id)
+          cnt++;
+      });
+      agent.add('There are currently '+cnt+' members in the club.');
+    });
+  }
+ 
+ //The function returning general information about members
+  function memberinfo(agent){
+    if(agent.parameters.members !== 'nothing')
+      agent.add('Thanks for your interest in Web Enthusiasts Club. We have got a lot of people onboard, who work on a wide array of projects. Want to be one of them? Then, join the recruitment drive and show off your skills... ,For more information on members like count and contact info, check the clubs team page:https://webclub.nitk.ac.in/team ');
+  }
+ 
+ //The function which reveals application details to the user regarding registration,etc.
+  function applyfunction(agent){
+    if(agent.parameters.apply !== 'nothing')
+      agent.add('Thanks for your interest in WEC.If you want to apply for an event, then head over to: https://webclub.nitk.ac.in/events ..If you want to check out the recruitment process, go to:  https://github.com/WebClub-NITK/DSC-NITK-Recruitments-2020..., If you want to enquire about a particular event, just tell me the name.');
+    else
+      agent.add('Sorry, I couldnt understand what you said. Try it another way...');
+  }
+  
+ //The function returns general information about upcoming events and asks the user if it wants to enquire about a particular event.
+  function upcomingEvent(agent)
+  {
+    if(agent.parameters.event !== 'nothing')
+      agent.add('Thanks for your interest in Web Enthusiasts Club.There is a lot going on here. If you want to attend a particular event,check out our events page for more information: https://webclub.nitk.ac.in/events,,,Or, If you want to enquire about a particular event, just tell me the name.');
+    else
+      agent.add('Sorry, I couldnt get what you said.. Can you rephrase that?');
+  }
+ 
+ //The default welcome intent
   function welcome(agent) {
     if(agent.parameters.hello !== 'nothing')
     agent.add('Hi there! Greetings! How can I assist? If you want to enquire about a particular event, just tell me the name.');   
    
   }
  
- //The default fallback intent of the chatbot, in case intent matching fails.
+ //The default fallback intent
   function fallback(agent) {
     agent.add(`I didn't understand`);
     agent.add(`I'm sorry, can you try again?`);
@@ -129,9 +168,13 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   intentMap.set('Club Events.',clubEvents);
   intentMap.set('General Information',getInfo);
   intentMap.set('Event Calculation',calculate);
+  intentMap.set('Members',memberinfo);
+  intentMap.set('Apply',applyfunction);
+  intentMap.set('Upcoming Events',upcomingEvent);
   intentMap.set('Default Welcome Intent', welcome);
   intentMap.set('Default Fallback Intent', fallback);
   // intentMap.set('your intent name here', yourFunctionHandler);
   // intentMap.set('your intent name here', googleAssistantHandler);
   agent.handleRequest(intentMap);
 });
+

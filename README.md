@@ -12,8 +12,6 @@ The tasks completed by me are the following:
   It is in the same github repository.
   ,,,
 2.Winter of Code Server (Hard) ID:Winter_of_Code_Server...
-  I have paired up with my friend Pranav Joshi.
-  So, the submission can be found here:
-  ,,,
-3.Winter of Code Homepage (Easy) ID:NITK_Winter_Of_Code_Homepage...
-  It is in the same github repository.
+  I have paired up with my friend Pranav Joshi.It is in the same repository.
+  So, the submission can also be found here:
+ ...

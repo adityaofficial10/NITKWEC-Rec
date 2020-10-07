@@ -40,7 +40,7 @@ Finally, all the queries were replaced with corresponding Sequelize queries incl
 5.Understanding SQL Transactions and implementing complex queries.
 6.Writing basic structure of Unmanaged Transactions
 
-
+# Experience:
 It was a great learning experience for both of us to work on this task, as we were complete newbies to the technologies used. It wouldn't have been possible without the great guidance provided my the mentors Adarsh Kamath and Saurabh Agarwala.
 
 Thanks...

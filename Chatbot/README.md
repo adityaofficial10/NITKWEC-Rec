@@ -38,3 +38,6 @@ Thanks...
 1. The ChatBot answers most of the basic queries which user may have, but is still in its basic stage and can be improved, as scope of improvement is always there.
  
 2. It gives appropriate links whenever it has no definitive answer or asks user to try it another way.
+
+3. I have used dummy data and I couldn't come up with many events, but I have added 9 events in the spreadsheet which can be extended accordingly.It has been uploaded in the same folder for reference.
+

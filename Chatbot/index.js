@@ -34,7 +34,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       res.data.map(event=>{
         if(event.title===name)
         { 
-          agent.add('Here are the details for '+ name +':1.Venue-' + event.venue + ',2.Date-' + event.date +'\n'+ '.If you are interested in the event and yet to apply, please head over to:'+ event.apply);
+          agent.add('Here are the details for '+ name +':1.Venue-' + event.venue + ',2.Date-' + event.date + ',3.Time:'+ event.time+ ' ,4.Description: '+event.description+',5.Link:'+event.link +'.If you are interested in the event and yet to apply, please head over to:'+ event.apply);
         }
         
         });
